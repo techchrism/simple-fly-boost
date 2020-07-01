@@ -39,18 +39,19 @@ public class SimpleFlyBoost extends JavaPlugin implements Listener
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event)
     {
-        if(event.getAction() == Action.LEFT_CLICK_AIR && event.getPlayer().isGliding() && event.getItem() == null)
+        if(event.getAction() == Action.LEFT_CLICK_AIR && event.getPlayer().isGliding() && event.getItem() == null
+                && event.getPlayer().hasPermission("simpleflyboost.boost"))
         {
             Player p = event.getPlayer();
-            p.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(3.0));
+            p.setVelocity(p.getEyeLocation().getDirection().normalize().multiply(2.0));
             p.playSound(p.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.0f);
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private void onSneakToggle(PlayerToggleSneakEvent event)
     {
-        if(event.isSneaking() && event.getPlayer().isGliding())
+        if(event.isSneaking() && event.getPlayer().isGliding() && event.getPlayer().hasPermission("simpleflyboost.freeze"))
         {
             Player p = event.getPlayer();
             p.setVelocity(new Vector(0.0, 0.0, 0.0));
