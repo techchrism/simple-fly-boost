@@ -1,0 +1,5 @@
+name: SimpleFlyBoost
+version: ${project.version}
+api-version: 1.13
+main: com.darkender.plugins.simpleflyboost.SimpleFlyBoost
+author: Techdoodle
