@@ -1,11 +1,14 @@
 package com.darkender.plugins.simpleflyboost;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -61,6 +64,33 @@ public class SimpleFlyBoost extends JavaPlugin implements Listener
         else if(!event.isSneaking() && event.getPlayer().hasMetadata("sneakpos"))
         {
             event.getPlayer().removeMetadata("sneakpos", this);
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    private void onBlockBreak(BlockBreakEvent event)
+    {
+        // Cancel block breaking while gliding
+        if(event.getPlayer().isGliding() && event.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR
+            && event.getPlayer().hasPermission("simpleflyboost.boost"))
+        {
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    private void onEntityDamageByEntity(EntityDamageByEntityEvent event)
+    {
+        if(!(event.getDamager() instanceof Player))
+        {
+            return;
+        }
+        Player p = (Player) event.getDamager();
+        // Cancel entity damage while gliding
+        if(p.isGliding() && p.getInventory().getItemInMainHand().getType() == Material.AIR
+                && p.hasPermission("simpleflyboost.boost"))
+        {
+            event.setCancelled(true);
         }
     }
 }
